@@ -1,16 +1,22 @@
-# Caserta Open World — WebGL Alpha 0.4
+# Caserta Open World — WebGL Alpha 0.5
 
-Gioco browser mobile/PWA con Three.js. **Mappa stilizzata ispirata a Caserta, non ancora geograficamente fedele.**
+Prototipo open-world stilizzato in Three.js. La mappa è **inventata e semplificata**: non è una ricostruzione geografica esatta di Caserta.
 
-## Novità
-- Reggia ricostruita con facciata articolata in `palace.js`: 3 corpi in rilievo, cornici, portali, finestre, balconi e piazzale con giardini.
-- Personaggi low-poly con geometrie anatomiche anziché soli parallelepipedi.
-- 40 pedoni, 12 auto ambientali, strade, lampioni, alberi, missioni e automobile guidabile.
-- D-pad touch a sinistra e pulsanti AUTO/VISTA/CORRI a destra.
-- Service worker network-first per evitare di mostrare versioni obsolete.
+## Funzionalità
 
-## Avvio
-Da terminale nella cartella: `python -m http.server 8000` e apri `http://localhost:8000`. In alternativa abilita GitHub Pages per il branch `main`. La libreria Three.js viene caricata da esm.sh: serve rete al primo accesso e **non è garantito il funzionamento offline completo**.
+- Reggia procedurale più dettagliata (`palace.js`), piazzale, giardini e facciata monumentale.
+- Personaggi low-poly con teste, braccia, gambe e simulazione base della camminata.
+- Automobili con carrozzeria, vetri, ruote cilindriche, fari e paraurti.
+- 40 pedoni e 12 veicoli in movimento lungo traiettorie semplici.
+- Collisioni rettangolari con edifici e facciata della Reggia per il giocatore e l'auto.
+- Strade, marciapiedi, attraversamenti, lampioni, alberi e missioni.
+- Controlli mobile con quattro frecce a sinistra e azioni a destra.
+- Ottimizzazione mobile di risoluzione, ombre e visibilità dei personaggi.
 
-## Limiti attuali
-Non è un GTA completo. Non ci sono ancora collisioni fisiche, intelligenza artificiale avanzata, modelli fotografici, animazioni scheletriche, guida realistica o cartografia esatta. I pedoni e il traffico usano traiettorie semplici. Non è stato effettuato un test grafico su smartphone reale in questa sessione.
+## Esecuzione
+
+Avvia `python -m http.server 8000` e apri `http://localhost:8000`, oppure pubblica con GitHub Pages. È necessaria una connessione per il caricamento iniziale di Three.js da esm.sh. La PWA non garantisce ancora l'offline completo.
+
+## Limiti e lavoro successivo
+
+Non è ancora un gioco GTA completo. Mancano una rete stradale reale, asset professionali, animazioni scheletriche, guida con fisica, traffico intelligente, interazioni con NPC e test di performance su dispositivi reali. La collisione è semplificata. Le modifiche sono state pubblicate ma non collaudate su smartphone in questa sessione.

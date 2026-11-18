@@ -1,4 +1,5 @@
 import * as T from 'https://esm.sh/three@0.170.0';
+import {buildPalace} from './palace.js';
 const scene=new T.Scene();scene.background=new T.Color(0x9ed7f0);scene.fog=new T.Fog(0x9ed7f0,140,580);
 const camera=new T.PerspectiveCamera(65,innerWidth/innerHeight,.1,900),renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;document.getElementById('game').append(renderer.domElement);
 scene.add(new T.HemisphereLight(0xdff5ff,0x657d55,2.3));const sun=new T.DirectionalLight(0xffe8c4,2.6);sun.position.set(-80,130,75);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-190;sun.shadow.camera.right=190;sun.shadow.camera.top=190;sun.shadow.camera.bottom=-190;scene.add(sun);
@@ -12,10 +13,18 @@ for(let x=-12;x<=12;x+=3.5)for(const z of [-26,26])box(scene,x,.15,z,2,.03,5,mat
 const facades=[0xe8c39e,0xd5b3a3,0xd9d0b5,0xe5d3a6,0xbac7b8,0xd1a99c].map(c=>mat(c));
 const random=n=>{const v=Math.sin(n*127.1+42.3)*43758.545;return v-Math.floor(v)};
 for(let i=-5;i<=5;i++)for(let j=-5;j<=5;j++){const x=i*47+6,z=j*47+5;if(Math.abs(x)<32||Math.abs(z)<32||Math.abs(x+105)<19||Math.abs(x-105)<19||Math.abs(z+105)<19||Math.abs(z-105)<19||Math.abs(x)<50&&z<-100)continue;const h=15+Math.floor(random(i*51+j*29)*4)*5,w=26,d=29,m=facades[Math.floor(random(i*11+j*23)*facades.length)];box(scene,x,h/2,z,w,h,d,m);box(scene,x,h+.7,z,w+1.5,1.4,d+1.5,materials.roof);for(let floor=0;floor<Math.floor(h/5);floor++)for(let k=-1;k<=1;k++){box(scene,x+k*7,3.5+floor*5,z+d/2+.12,3.2,3.2,.18,materials.glass);box(scene,x+k*7,2.2+floor*5,z+d/2+.27,3.8,.4,.4,materials.walk)}}
-const palace=mat(0xd6b38f),trim=mat(0xf0d9b7);box(scene,0,13,-194,104,26,24,palace);box(scene,0,28,-194,107,3,26,trim);box(scene,0,16,-194,23,32,26,trim);box(scene,0,34,-194,27,3,27,materials.roof);for(let x=-47;x<=47;x+=8){box(scene,x,11,-181.8,4.1,8,.35,materials.glass);box(scene,x,22,-181.8,3.5,5,.35,materials.glass);box(scene,x,16,-181.6,5,.6,.8,trim)}box(scene,0,5,-181.2,7,10,.6,materials.black);
+buildPalace(scene);
 const trees=[];function tree(x,z){box(scene,x,3,z,1.2,6,1.2,materials.trunk);sphere(scene,x,9,z,5,materials.leaf)}for(let z=-290;z<=290;z+=24){if(Math.abs(z)<34||z<-165&&z>-225)continue;tree(-24,z);tree(24,z)}for(let x=-290;x<=290;x+=24){if(Math.abs(x)<34)continue;tree(x,-24);tree(x,24)}
 function lamp(x,z){box(scene,x,5,z,.5,10,.5,materials.black);box(scene,x,10.3,z,2.8,.7,1.3,materials.stripe)}for(let z=-275;z<=275;z+=44){lamp(-21,z);lamp(21,z)}
-function person(color){const g=new T.Group(),shirt=mat(color);box(g,-.42,1,0,.65,2,.75,materials.black);box(g,.42,1,0,.65,2,.75,materials.black);box(g,0,3,0,1.65,2.2,1.05,shirt);sphere(g,0,4.65,0,.85,materials.skin);box(g,0,5.2,-.15,1.35,.45,1.2,materials.hair);return g}
+function person(color){const g=new T.Group(),shirt=mat(color),jeans=mat(0x334459),shoe=mat(0x292b30),hair=mat(0x433027),skin=materials.skin;
+function limb(x,y,z,r1,r2,h,m){const o=new T.Mesh(new T.CylinderGeometry(r1,r2,h,9),m);o.position.set(x,y,z);o.castShadow=true;g.add(o);return o}
+for(const x of [-.37,.37]){limb(x,1.15,0,.26,.23,2.1,jeans);box(g,x,.13,-.16,.67,.3,1.1,shoe)}
+const torso=new T.Mesh(new T.CylinderGeometry(.74,.56,1.95,10),shirt);torso.position.y=3;torso.castShadow=true;g.add(torso);
+for(const x of [-1,1]){const arm=limb(x*.85,3.02,0,.22,.17,1.65,shirt);arm.rotation.z=x*.14;limb(x*.98,2.1,0,.19,.17,.5,skin)}
+limb(0,4.13,0,.25,.25,.45,skin);const head=new T.Mesh(new T.SphereGeometry(.63,12,10),skin);head.position.y=4.82;head.castShadow=true;g.add(head);
+const cap=new T.Mesh(new T.SphereGeometry(.65,12,8,0,Math.PI*2,0,Math.PI*.52),hair);cap.position.y=4.97;g.add(cap);
+for(const x of [-.24,.24]){const eye=new T.Mesh(new T.SphereGeometry(.055,6,6),materials.black);eye.position.set(x,4.85,-.57);g.add(eye)}
+return g}
 const player=person(0x335f99);scene.add(player);player.position.set(0,0,-40);
 function vehicle(color){const g=new T.Group(),paint=mat(color,.45);box(g,0,1.4,0,4.8,2.1,9,paint);box(g,0,3, -1,4.2,1.6,4.4,materials.glass);for(const x of [-2.35,2.35])for(const z of [-2.8,2.8])box(g,x,.9,z,.8,1.6,1.5,materials.black);box(g,0,1.4,-4.53,3.8,.5,.15,materials.stripe);return g}
 const car=vehicle(0xf5b839);scene.add(car);car.position.set(10,0,-34);

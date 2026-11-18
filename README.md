@@ -1,15 +1,16 @@
-# Caserta Open World — WebGL Alpha 0.3
+# Caserta Open World — WebGL Alpha 0.4
 
-Prototipo 3D con Three.js WebGL, ambiente stilizzato ispirato al centro di Caserta, Reggia semplificata, edifici, strade, marciapiedi, attraversamenti, alberi, lampioni, 40 pedoni e 12 auto ambientali.
+Gioco browser mobile/PWA con Three.js. **Mappa stilizzata ispirata a Caserta, non ancora geograficamente fedele.**
+
+## Novità
+- Reggia ricostruita con facciata articolata in `palace.js`: 3 corpi in rilievo, cornici, portali, finestre, balconi e piazzale con giardini.
+- Personaggi low-poly con geometrie anatomiche anziché soli parallelepipedi.
+- 40 pedoni, 12 auto ambientali, strade, lampioni, alberi, missioni e automobile guidabile.
+- D-pad touch a sinistra e pulsanti AUTO/VISTA/CORRI a destra.
+- Service worker network-first per evitare di mostrare versioni obsolete.
 
 ## Avvio
+Da terminale nella cartella: `python -m http.server 8000` e apri `http://localhost:8000`. In alternativa abilita GitHub Pages per il branch `main`. La libreria Three.js viene caricata da esm.sh: serve rete al primo accesso e **non è garantito il funzionamento offline completo**.
 
-Pubblicare su HTTPS (GitHub Pages) oppure avviare un server locale con `python -m http.server 8000`. Richiede WebGL e connessione iniziale per caricare Three.js da esm.sh. Il service worker memorizza i file locali; **l'uso offline completo non è garantito** senza rendere locale anche la libreria Three.js.
-
-## Controlli
-
-Smartphone: frecce a sinistra, AUTO/VISTA/CORRI a destra. PC: WASD o frecce, E auto, Q telecamera, Shift corsa.
-
-## Limiti
-
-Mappa interpretativa, non cartograficamente accurata; pedoni e auto seguono traiettorie semplici; collisioni, fisica, traffico intelligente e animazioni scheletriche sono ancora da realizzare. Nessun test su dispositivo reale effettuato in questa sessione.
+## Limiti attuali
+Non è un GTA completo. Non ci sono ancora collisioni fisiche, intelligenza artificiale avanzata, modelli fotografici, animazioni scheletriche, guida realistica o cartografia esatta. I pedoni e il traffico usano traiettorie semplici. Non è stato effettuato un test grafico su smartphone reale in questa sessione.

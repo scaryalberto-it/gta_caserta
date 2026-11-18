@@ -1,6 +1,6 @@
-# Caserta Open World — Alpha 0.1
+# Caserta Open World — Alpha 0.2
 
-Prototipo **giocabile**, 3D stilizzato realizzato con proiezione prospettica su Canvas 2D, senza dipendenze esterne. La mappa è **inventata e semplificata**, non una riproduzione cartografica fedele di Caserta.
+Prototipo **giocabile**, 3D stilizzato realizzato con proiezione prospettica su Canvas 2D, senza dipendenze esterne. La mappa è **inventata e semplificata**, con strade secondarie e pedoni, non una riproduzione cartografica fedele di Caserta.
 
 ## Avvio
 
@@ -13,7 +13,7 @@ La PWA usa un service worker per conservare tutti i file in cache. Il primo acce
 
 ## Comandi
 
-- Smartphone: joystick sinistro; AUTO per entrare/uscire dall'auto gialla; CORRI tenuto premuto; VISTA per ruotare la telecamera.
+- Smartphone: quattro frecce direzionali a sinistra; AUTO per entrare/uscire dall'auto gialla; CORRI tenuto premuto; VISTA per ruotare la telecamera.
 - PC: WASD o frecce per camminare; E per auto; Shift per correre; Q per ruotare la visuale.
 
 ## Gameplay
@@ -22,4 +22,4 @@ Tre missioni a rotazione: Piazza Vanvitelli, Corso Trieste e Reggia. Avvicinati 
 
 ## Limiti dichiarati
 
-Questa è una **vertical slice dimostrativa**: la prospettiva è simulata in Canvas (non WebGL), la macchina si guida con un modello arcade basilare, la mappa è stilizzata e non esistono ancora NPC, traffico, combattimento, collisioni complete o salvataggio della posizione. È una base offline e leggera per un successivo upgrade a un vero motore 3D (Three.js/Babylon.js).
+Questa è una **vertical slice dimostrativa**: la prospettiva è simulata in Canvas (non WebGL), la macchina si guida con un modello arcade basilare, la mappa è stilizzata e sono presenti pedoni e traffico ambientale semplificati, ma non ancora combattimento, collisioni complete o salvataggio della posizione. È una base offline e leggera per un successivo upgrade a un vero motore 3D (Three.js/Babylon.js).

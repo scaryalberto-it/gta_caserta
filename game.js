@@ -26,7 +26,27 @@ const cap=new T.Mesh(new T.SphereGeometry(.65,12,8,0,Math.PI*2,0,Math.PI*.52),ha
 for(const x of [-.24,.24]){const eye=new T.Mesh(new T.SphereGeometry(.055,6,6),materials.black);eye.position.set(x,4.85,-.57);g.add(eye)}
 return g}
 const player=person(0x335f99);scene.add(player);player.position.set(0,0,-40);
-function vehicle(color){const g=new T.Group(),paint=mat(color,.45);box(g,0,1.4,0,4.8,2.1,9,paint);box(g,0,3, -1,4.2,1.6,4.4,materials.glass);for(const x of [-2.35,2.35])for(const z of [-2.8,2.8])box(g,x,.9,z,.8,1.6,1.5,materials.black);box(g,0,1.4,-4.53,3.8,.5,.15,materials.stripe);return g}
+function vehicle(color){
+const g=new T.Group(),paint=mat(color,.4),windows=mat(0x34596d,.18),chrome=mat(0xd7dce1,.3),rubber=mat(0x202329),light=mat(0xffedb6),tail=mat(0xd84036);
+box(g,0,1.35,0,4.5,1.65,8.6,paint);
+box(g,0,2.5,-.6,4.15,1.25,4.8,paint);
+box(g,0,2.65,-.7,4.2,.98,4.3,windows);
+box(g,0,3.28,-.6,4.3,.25,4.8,paint);
+for(const x of [-1,1]){
+for(const z of [-2.75,2.75]){
+const wheel=new T.Mesh(new T.CylinderGeometry(1.05,1.05,.55,14),rubber);
+wheel.rotation.z=Math.PI/2;wheel.position.set(x*2.3,1,z);wheel.castShadow=true;g.add(wheel);
+const hub=new T.Mesh(new T.CylinderGeometry(.48,.48,.58,12),chrome);
+hub.rotation.z=Math.PI/2;hub.position.copy(wheel.position);g.add(hub);
+}
+box(g,x*1.48,1.6,-4.33,.95,.65,.16,light);
+box(g,x*1.48,1.6,4.33,.95,.65,.16,tail);
+box(g,x*2.27,1.7,-.7,.12,.14,3.5,chrome);
+}
+box(g,0,1.05,-4.4,3.4,.4,.35,chrome);
+box(g,0,1.05,4.4,3.4,.4,.35,chrome);
+box(g,0,1.25,-4.6,1.4,.3,.12,chrome);
+return g}
 const car=vehicle(0xf5b839);scene.add(car);car.position.set(10,0,-34);
 const people=[];for(let i=0;i<40;i++){const p=person([0xbd5656,0x508b8a,0x655a9e,0xc5a052,0x4c729a][i%5]);p.position.set(i%2?20:-20,0,-170+random(i+25)*340);scene.add(p);people.push({o:p,speed:1+random(i+67)*2,phase:i,walk:0})}
 const traffic=[];for(let i=0;i<12;i++){const c=vehicle([0xc74d4d,0x507fbd,0xe3c65a,0xd9e0e0][i%4]);c.position.set(i%2?7:-7,0,-190+i*32);scene.add(c);traffic.push({o:c,speed:6+random(i+80)*6})}

@@ -17,14 +17,14 @@ jobs:
         with:
           node-version: 22
       - run: node --check caserta2.js
-      - run: node scripts/fetch-map.mjs
+      - run: node scripts/fetch-map.mjs || echo 'Using bundled reference map'
       - run: npm install --no-save --no-package-lock playwright
       - run: npx playwright install --with-deps chromium
       - run: node tests/smoke.mjs
       - run: |
           mkdir -p dist/data
-          cp index.html caserta2.js sw.js manifest.webmanifest icon.svg dist/
-          cp data/caserta.osm.json dist/data/
+          cp index.html caserta2.js caserta-map.js sw.js manifest.webmanifest icon.svg dist/
+          if [ -f data/caserta.osm.json ]; then cp data/caserta.osm.json dist/data/; fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

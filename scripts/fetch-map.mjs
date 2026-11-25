@@ -1,9 +1,9 @@
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,writeFile,rename} from 'node:fs/promises';
 const box='41.065,14.319,41.082,14.345';
-const query='[out:json][timeout:90];(way["highway"]('+box+');way["building"]('+box+');way["leisure"~"park|garden"]('+box+');node["name"~"Reggia|Piazza|Stazione|Duomo"]('+box+'););out geom;';
+const query='[out:json][timeout:120];(way["highway"]('+box+');way["building"]('+box+');relation["building"]('+box+');way["leisure"]('+box+');relation["leisure"~"park|garden"]('+box+');way["landuse"~"grass|forest|recreation_ground|cemetery"]('+box+');way["natural"~"water|wood|scrub"]('+box+');way["amenity"~"parking|fountain"]('+box+');way["railway"~"rail|platform"]('+box+');nwr["name"~"Reggia|Piazza|Stazione|Duomo|Corso Trieste|Via Mazzini|Alberto Pinto|Macrico",i]('+box+'););out geom;';
 let data;
-for(const url of ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter']){
- try{const res=await fetch(url+'?data='+encodeURIComponent(query),{signal:AbortSignal.timeout(120000)});if(!res.ok)throw Error('HTTP '+res.status);const candidate=await res.json();const ways=candidate.elements.filter(e=>e.type==='way');if(ways.filter(e=>e.tags?.highway).length<20||ways.filter(e=>e.tags?.building).length<10)throw Error('Incomplete map');data=candidate;break}catch(e){console.error(url,e.message)}
+for(const url of ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter']){
+ try{const res=await fetch(url+'?data='+encodeURIComponent(query),{signal:AbortSignal.timeout(150000)});if(!res.ok)throw Error('HTTP '+res.status);const candidate=await res.json();const ways=candidate.elements.filter(e=>e.type==='way');const roads=ways.filter(e=>e.tags?.highway&&e.geometry?.length>1);const buildings=ways.filter(e=>e.tags?.building&&e.geometry?.length>3);const names=candidate.elements.map(e=>e.tags?.name||'').join('|').toLowerCase();if(roads.length<200||buildings.length<300||!names.includes('corso trieste')||!names.includes('mazzini')||!names.includes('piazza dante')||!names.includes('reggia'))throw Error('Missing real city geometry or landmarks');data=candidate;console.log({roads:roads.length,buildings:buildings.length});break}catch(e){console.error(url,e.message)}
 }
-if(!data)throw Error('No valid map obtained; existing snapshot was not modified');
-await mkdir('data',{recursive:true});await writeFile('data/caserta.osm.json',JSON.stringify(data));console.log('Saved',data.elements.length,'OSM elements. © OpenStreetMap contributors, ODbL.');
+if(!data)throw Error('No validated real map; refusing to publish approximate city');
+await mkdir('data',{recursive:true});await writeFile('data/caserta.osm.json.tmp',JSON.stringify(data));await rename('data/caserta.osm.json.tmp','data/caserta.osm.json');console.log('Saved',data.elements.length,'OSM elements. © OpenStreetMap contributors, ODbL.');

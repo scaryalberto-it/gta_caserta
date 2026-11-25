@@ -1,0 +1,36 @@
+name: Acquire real Caserta map
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/acquire-map.yml'
+      - 'scripts/fetch-map.mjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: caserta-map
+  cancel-in-progress: false
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/fetch-map.mjs
+      - run: |
+          git config user.name 'caserta-map[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/caserta.osm.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Bundle validated OpenStreetMap geometry for Caserta"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: caserta-real-map
+          path: data/caserta.osm.json
